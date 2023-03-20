@@ -1,4 +1,4 @@
-ALTER TABLE ads
+ALTER TABLE vaja1.ads
     ADD COLUMN category_id INT UNSIGNED NOT NULL,
 ADD CONSTRAINT fk_category_id
 FOREIGN KEY (category_id) REFERENCES categories(id);
@@ -18,6 +18,6 @@ VALUES ('Electronics'),
        ('Books'),
        ('Toys and Games');
 
-ALTER TABLE ads
+ALTER TABLE vaja1.ads
     ADD COLUMN publish_date DATETIME DEFAULT CURRENT_TIMESTAMP;
-ALTER TABLE ads ADD COLUMN price FLOAT NOT NULL;
+ALTER TABLE vaja1.ads ADD COLUMN price FLOAT NOT NULL;

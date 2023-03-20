@@ -6,7 +6,7 @@ function get_ad($id)
 {
     global $conn;
     $id = mysqli_real_escape_string($conn, $id);
-    $query = "SELECT ads.*, users.username, categories.name as category_name FROM ads LEFT JOIN users ON users.id = ads.user_id LEFT JOIN categories ON categories.id = ads.category_id WHERE ads.id = $id;";
+    $query = "SELECT ads.*, users.username, categories.name as category_name FROM vaja1.ads LEFT JOIN vaja1.users ON users.id = ads.user_id LEFT JOIN vaja1.categories ON categories.id = ads.category_id WHERE ads.id = $id;";
     $res = $conn->query($query);
     if ($obj = $res->fetch_object()) {
         return $obj;
