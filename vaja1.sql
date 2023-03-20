@@ -41,7 +41,13 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` text COLLATE utf8_slovenian_ci NOT NULL,
-  `password` text COLLATE utf8_slovenian_ci NOT NULL,
+    `password` text COLLATE utf8_slovenian_ci NOT NULL,
+    `email` text COLLATE utf8_slovenian_ci NOT NULL,
+    `first_name` text COLLATE utf8_slovenian_ci NOT NULL,
+    `last_name` text COLLATE utf8_slovenian_ci NOT NULL,
+    `address` text COLLATE utf8_slovenian_ci,
+    `postal_code` text COLLATE utf8_slovenian_ci,
+    `phone_number` text COLLATE utf8_slovenian_ci,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
 COMMIT;
