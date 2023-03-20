@@ -41,6 +41,9 @@ $conn->set_charset("UTF8");
                 if (isset($_SESSION["USER_ID"])) {
                     ?>
                     <li class="nav-item">
+                        <a class="nav-link" href="my_ads.php">Moji oglasi</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="publish.php">Objavi oglas</a>
                     </li>
                     <li class="nav-item">

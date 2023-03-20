@@ -6,7 +6,7 @@ function get_ad($id)
 {
     global $conn;
     $id = mysqli_real_escape_string($conn, $id);
-    $query = "SELECT ads.*, users.username, categories.name as category_name FROM vaja1.ads LEFT JOIN vaja1.users ON users.id = ads.user_id LEFT JOIN vaja1.categories ON categories.id = ads.category_id WHERE ads.id = $id;";
+    $query = "SELECT ads.*, users.username, categories.name, users.postal_code, users.email, users.phone_number, users.address FROM vaja1.ads LEFT JOIN vaja1.users ON users.id = ads.user_id LEFT JOIN vaja1.categories ON categories.id = ads.category_id WHERE ads.id = $id;";
     $res = $conn->query($query);
     if ($obj = $res->fetch_object()) {
         return $obj;
@@ -27,21 +27,27 @@ if ($ad == null) {
 //Base64 koda za sliko (hexadecimalni zapis byte-ov iz datoteke)
 $img_data = base64_encode($ad->image);
 ?>
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title"><?php echo $ad->title; ?></h4>
-        <h6 class="card-subtitle mb-2 text-muted">Cena: <?php echo $ad->price; ?> EUR</h6>
-        <p class="card-text"><?php echo $ad->description; ?></p>
-        <img src="data:image/jpg;base64, <?php echo $img_data; ?>" class="card-img-top" alt="ad"/>
-        <p class="card-text">Objavil: <?php echo $ad->username; ?></p>
-        <p class="card-text">E-pošta: <?php echo $ad->email; ?></p>
-        <p class="card-text">Telefon: <?php echo $ad->phone_number; ?></p>
-        <p class="card-text">Kraj: <?php echo $ad->address; ?></p>
-        <p class="card-text">Poštna številka: <?php echo $ad->postal_code; ?></p>
-        <p class="card-text">Kategorija: <?php echo $ad->category_name; ?></p>
-        <a href="index.php" class="btn btn-primary">Nazaj</a>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title"><?php echo $ad->title; ?></h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Cena: <?php echo $ad->price; ?> EUR</h6>
+                    <p class="card-text"><?php echo $ad->description; ?></p>
+                    <img src="data:image/jpg;base64, <?php echo $img_data; ?>" class="card-img-top" alt="ad"/>
+                    <p class="card-text">Objavil: <?php echo $ad->username; ?></p>
+                    <p class="card-text">E-pošta: <?php echo $ad->email; ?></p>
+                    <p class="card-text">Telefon: <?php echo $ad->phone_number; ?></p>
+                    <p class="card-text">Kraj: <?php echo $ad->address; ?></p>
+                    <p class="card-text">Poštna številka: <?php echo $ad->postal_code; ?></p>
+                    <p class="card-text">Kategorija: <?php echo $ad->name; ?></p>
+                    <a href="index.php" class="btn btn-primary">Nazaj</a>
+                </div>
+            </div>
+            <hr/>
+        </div>
     </div>
 </div>
-<hr/>
 
 <?php include_once('footer.php'); ?>

@@ -12,7 +12,7 @@ function username_exists($username): bool
 }
 
 // Funkcija ustvari uporabnika v tabeli users. Poskrbi tudi za ustrezno šifriranje uporabniškega gesla.
-function register_user($username, $password, $email, $name, $surname, $address = '', $postal_code = '', $phone_number = ''): bool
+function register_user($username, $password, $email, $first_name, $last_name, $address = '', $postal_code = '', $phone_number = ''): bool
 {
     global $conn;
     $username = mysqli_real_escape_string($conn, $username);
@@ -24,13 +24,13 @@ function register_user($username, $password, $email, $name, $surname, $address =
         https://crackstation.net/hashing-security.htm
     */
     $email = mysqli_real_escape_string($conn, $email);
-    $name = mysqli_real_escape_string($conn, $name);
-    $surname = mysqli_real_escape_string($conn, $surname);
+    $name = mysqli_real_escape_string($conn, $first_name);
+    $surname = mysqli_real_escape_string($conn, $last_name);
     $address = mysqli_real_escape_string($conn, $address);
     $postal_code = mysqli_real_escape_string($conn, $postal_code);
     $phone_number = mysqli_real_escape_string($conn, $phone_number);
 
-    $query = "INSERT INTO users (username, password, email, name, surname, address, postal_code, phone_number) VALUES ('$username', '$pass', '$email', '$name', '$surname', '$address', '$postal_code', '$phone_number');";
+    $query = "INSERT INTO users (username, password, email, first_name, last_name, address, postal_code, phone_number) VALUES ('$username', '$pass', '$email', '$first_name', '$last_name', '$address', '$postal_code', '$phone_number');";
     if ($conn->query($query)) {
         return true;
     } else {
@@ -58,7 +58,7 @@ if (isset($_POST["submit"])) {
     else if (empty($_POST["username"]) || empty($_POST["password"]) || empty($_POST["email"]) || empty($_POST["first_name"]) || empty($_POST["last_name"])) {
         $error = "Please fill in all required fields.";
     } //Register user
-    else if (register_user($_POST["username"], $_POST["password"], $_POST["email"], $_POST["first_name"], $_POST["last_name"], $_POST["address"], $_POST["postal_code"], $_POST["phone"])) {
+    else if (register_user($_POST["username"], $_POST["password"], $_POST["email"], $_POST["first_name"], $_POST["last_name"], $_POST["address"], $_POST["postal_code"], $_POST["phone_number"])) {
         header("Location: login.php");
         die();
     } //Registration failed
@@ -91,11 +91,11 @@ if (isset($_POST["submit"])) {
                     </div>
                     <div class="mb-3">
                         <label for="name" class="form-label">Ime</label>
-                        <input type="text" required name="name" class="form-control">
+                        <input type="text" required name="first_name" class="form-control">
                     </div>
                     <div class="mb-3">
                         <label for="surname" class="form-label">Priimek</label>
-                        <input type="text" required name="surname" class="form-control">
+                        <input type="text" required name="last_name" class="form-control">
                     </div>
                     <div class="mb-3">
                         <label for="address" class="form-label">Naslov</label>

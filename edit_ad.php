@@ -32,41 +32,47 @@ if (isset($_POST["submit"])) {
 }
 
 ?>
-<h2 class="fw-bold mt-4 mb-3">Uredi oglas</h2>
-<form action="/edit_ad.php" method="POST">
-    <input type="hidden" name="ad_id" value="<?php echo $ad_id; ?>">
-    <div class="mb-3">
-        <label for="title" class="form-label">Naslov</label>
-        <input type="text" name="title" id="title" class="form-control" value="<?php echo $title; ?>">
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 mx-auto">
+            <h2 class="fw-bold mt-4 mb-3">Uredi oglas</h2>
+            <form action="/edit_ad.php" method="POST">
+                <input type="hidden" name="ad_id" value="<?php echo $ad_id; ?>">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Naslov</label>
+                    <input type="text" name="title" id="title" class="form-control" value="<?php echo $title; ?>">
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Vsebina</label>
+                    <textarea name="description" id="description" rows="10" cols="50"
+                              class="form-control"><?php echo $desc; ?></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="category" class="form-label">Kategorija</label>
+                    <select name="category" id="category" class="form-select">
+                        <?php
+                        $query = "SELECT id, name FROM categories";
+                        $result = $conn->query($query);
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row['id'] . '"';
+                            if ($category_id == $row['id']) {
+                                echo ' selected';
+                            }
+                            echo '>' . $row['name'] . '</option>';
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <input type="submit" name="submit" value="Shrani" class="btn btn-primary">
+                </div>
+                <div class="mb-3">
+                    <label><?php echo $error; ?></label>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="description" class="form-label">Vsebina</label>
-        <textarea name="description" id="description" rows="10" cols="50" class="form-control"><?php echo $desc; ?></textarea>
-    </div>
-    <div class="mb-3">
-        <label for="category" class="form-label">Kategorija</label>
-        <select name="category" id="category" class="form-select">
-            <?php
-            $query = "SELECT id, name FROM categories";
-            $result = $conn->query($query);
-            while ($row = $result->fetch_assoc()) {
-                echo '<option value="' . $row['id'] . '"';
-                if ($category_id == $row['id']) {
-                    echo ' selected';
-                }
-                echo '>' . $row['name'] . '</option>';
-            }
-            ?>
-        </select>
-    </div>
-    <div class="mb-3">
-        <input type="submit" name="submit" value="Shrani" class="btn btn-primary">
-    </div>
-    <div class="mb-3">
-        <label><?php echo $error; ?></label>
-    </div>
-</form>
-
+</div>
 <?php
 include_once('footer.php');
 ?>
