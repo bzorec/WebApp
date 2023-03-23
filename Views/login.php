@@ -31,7 +31,7 @@ if (isset($_POST["submit"])) {
         <div class="row">
             <div class="col-lg-6 mx-auto">
                 <h2 class="mb-4">Prijava</h2>
-                <form action="/login.php" method="POST">
+                <form action="/Views/login.php" method="POST">
                     <div class="mb-3">
                         <label for="username" class="form-label">Uporabniško ime</label>
                         <input type="text" required name="username" class="form-control">

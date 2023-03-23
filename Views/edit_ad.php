@@ -36,7 +36,7 @@ if (isset($_POST["submit"])) {
     <div class="row">
         <div class="col-lg-6 mx-auto">
             <h2 class="fw-bold mt-4 mb-3">Uredi oglas</h2>
-            <form action="/edit_ad.php" method="POST">
+            <form action="/Views/edit_ad.php" method="POST">
                 <input type="hidden" name="ad_id" value="<?php echo $ad_id; ?>">
                 <div class="mb-3">
                     <label for="title" class="form-label">Naslov</label>

@@ -1,17 +1,3 @@
-<?php
-session_start();
-
-//Seja poteče po 30 minutah - avtomatsko odjavi neaktivnega uporabnika
-if (isset($_SESSION['LAST_ACTIVITY']) && time() - $_SESSION['LAST_ACTIVITY'] < 1800) {
-    session_regenerate_id(true);
-}
-$_SESSION['LAST_ACTIVITY'] = time();
-
-//Poveži se z bazo
-$conn = new mysqli('localhost', 'root', '', 'vaja1');
-//Nastavi kodiranje znakov, ki se uporablja pri komunikaciji z bazo
-$conn->set_charset("UTF8");
-?>
 <!DOCTYPE html>
 <html lang="si">
 
@@ -67,4 +53,3 @@ $conn->set_charset("UTF8");
 </nav>
 
 <hr/>
-
