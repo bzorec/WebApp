@@ -1,5 +1,5 @@
 <?php
-include_once('header.php');
+include_once('header_view.php');
 
 // Funkcija vstavi nov oglas v bazo. Preveri tudi, ali so podatki pravilno izpolnjeni. 
 // Vrne false, če je prišlo do napake oz. true, če je oglas bil uspešno vstavljen.
@@ -96,5 +96,5 @@ if (isset($_POST["submit"])) {
         </div>
     </div>
 <?php
-include_once('footer.php');
+include_once('footer_view.php');
 ?>

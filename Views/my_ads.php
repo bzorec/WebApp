@@ -1,5 +1,5 @@
 <?php
-include_once('header.php');
+include_once('header_view.php');
 
 // Funkcija za prikaz uporabnikovih oglasov
 function showAds()
@@ -36,5 +36,5 @@ function showAds()
 </div>
 
 <?php
-include_once('footer.php');
+include_once('footer_view.php');
 ?>

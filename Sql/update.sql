@@ -20,4 +20,17 @@ VALUES ('Electronics'),
 
 ALTER TABLE vaja1.ads
     ADD COLUMN publish_date DATETIME DEFAULT CURRENT_TIMESTAMP;
-ALTER TABLE vaja1.ads ADD COLUMN price FLOAT NOT NULL;
+ALTER TABLE vaja1.ads
+    ADD COLUMN price FLOAT NOT NULL;
+
+ALTER TABLE users
+    ADD COLUMN role ENUM('user', 'admin') NOT NULL DEFAULT 'user';
+
+CREATE TABLE comments (
+                          id INT AUTO_INCREMENT PRIMARY KEY,
+                          ad_id INT NOT NULL,
+                          user_id INT NOT NULL,
+                          content TEXT NOT NULL,
+                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                          ip_address VARCHAR(45)
+);

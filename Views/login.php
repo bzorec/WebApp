@@ -1,18 +1,21 @@
 <?php
-include_once('header.php');
+include_once('header_view.php');
 
 function validate_login($username, $password): int
 {
     global $conn;
     $username = mysqli_real_escape_string($conn, $username);
     $pass = sha1($password);
-    $query = "SELECT * FROM vaja1.users WHERE username='$username' AND password='$pass'";
+    $query = "SELECT id, role FROM vaja1.users WHERE username='$username' AND password='$pass'";
     $res = $conn->query($query);
     if ($user_obj = $res->fetch_object()) {
+        $_SESSION["USER_ID"] = $user_obj->id;
+        $_SESSION["ROLE"] = $user_obj->role;
         return $user_obj->id;
     }
     return -1;
 }
+
 
 $error = "";
 if (isset($_POST["submit"])) {
@@ -50,5 +53,5 @@ if (isset($_POST["submit"])) {
     </div>
 
 <?php
-include_once('footer.php');
+include_once('footer_view.php');
 ?>

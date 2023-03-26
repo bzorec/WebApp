@@ -1,5 +1,5 @@
 <?php
-include_once('header.php');
+include_once('header_view.php');
 global $conn;
 $error = "";
 if (isset($_POST["submit"])) {
@@ -74,5 +74,5 @@ if (isset($_POST["submit"])) {
     </div>
 </div>
 <?php
-include_once('footer.php');
+include_once('footer_view.php');
 ?>

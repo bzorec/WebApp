@@ -1,9 +1,9 @@
-<?php include_once('header.php'); ?>
+<?php global $error ?>
 <div class="container">
     <div class="row">
         <div class="col-lg-6 mx-auto">
             <h2 class="mb-4">Registracija</h2>
-            <form action="register.php" method="POST">
+            <form action="/index.php?page=register" method="POST">
                 <div class="mb-3">
                     <label for="username" class="form-label">Uporabniško ime</label>
                     <input type="text" required name="username" class="form-control">
@@ -50,4 +50,3 @@
         </div>
     </div>
 </div>
-<?php include_once('footer.php'); ?>

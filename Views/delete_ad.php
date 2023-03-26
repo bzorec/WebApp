@@ -1,5 +1,5 @@
 <?php
-include_once('header.php');
+include_once('header_view.php');
 global $conn;
 $error = "";
 if (isset($_SESSION["USER_ID"]) && isset($_GET["id"])) {
@@ -40,5 +40,5 @@ if (isset($_SESSION["USER_ID"]) && isset($_GET["id"])) {
 </div>
 
 <?php
-include_once('footer.php');
+include_once('footer_view.php');
 ?>

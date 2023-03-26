@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vaja 1</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
@@ -21,28 +23,37 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="index.php">Domov</a>
+                    <a class="nav-link" href="../index.php">Domov</a>
                 </li>
                 <?php
                 if (isset($_SESSION["USER_ID"])) {
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="my_ads.php">Moji oglasi</a>
+                        <a class="nav-link" href="../index.php?page=my_ads.php">Moji oglasi</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="publish.php">Objavi oglas</a>
+                        <a class="nav-link" href="../index.php?page=publish.php">Objavi oglas</a>
                     </li>
+                    <?php
+                    if ($_SESSION["ROLE"] == "admin") {
+                        ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../index.php?page=admin.php">Admin</a>
+                        </li>
+                        <?php
+                    }
+                    ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="logout.php">Odjava</a>
+                        <a class="nav-link" href="../index.php?page=logout.php">Odjava</a>
                     </li>
                     <?php
                 } else {
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="login.php">Prijava</a>
+                        <a class="nav-link" href="../index.php?page=login">Prijava</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="register.php">Registracija</a>
+                        <a class="nav-link" href="../index.php?page=register">Registracija</a>
                     </li>
                     <?php
                 }
@@ -51,5 +62,6 @@
         </div>
     </div>
 </nav>
+
 
 <hr/>
