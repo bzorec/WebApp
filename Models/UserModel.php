@@ -117,6 +117,16 @@ class UserModel
         $current_user_role = $this->get_user_role($current_user_id);
 
         if ($current_user_role === 'admin') {
+            $query = "DELETE FROM comments WHERE user_id=?;";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+
+            $query = "DELETE FROM ads WHERE user_id=?;";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+
             $query = "DELETE FROM users WHERE id=?;";
             $stmt = $this->conn->prepare($query);
             $stmt->bind_param("i", $user_id);
@@ -133,7 +143,7 @@ class UserModel
         }
     }
 
-    function edit_user($current_user,$user_id, $username, $email, $first_name, $last_name): bool
+    function edit_user($current_user, $user_id, $username, $email, $first_name, $last_name): bool
     {
         $current_user_role = $this->get_user_role($current_user);
 

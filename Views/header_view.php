@@ -24,13 +24,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="../index.php">Domov</a>
+                    <a class="nav-link" href="../index.php?page=home">Domov</a>
                 </li>
                 <?php
                 if (isset($_SESSION["USER_ID"])) {
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../index.php?page=my_ads">Moji oglasi</a>
+                        <a class="nav-link" href="../index.php?page=user_ads">Moji oglasi</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="../index.php?page=publish">Objavi oglas</a>

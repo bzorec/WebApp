@@ -1,0 +1,7 @@
+# .htaccess file sets the Apache server configuration in the current directory
+# Enable mod_rewrite
+RewriteEngine on
+
+# Rewrite requests for the root URL to index.php?page=home
+RewriteCond %{REQUEST_URI} ^/$
+RewriteRule ^$ /index.php?page=home [L]

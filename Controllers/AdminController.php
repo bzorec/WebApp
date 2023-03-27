@@ -30,7 +30,7 @@ class AdminController
     function handleDeleteUser(): void
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405); // Method Not Allowed
+            http_response_code(405);
             exit();
         }
         $user_id = $_POST['user_id'];

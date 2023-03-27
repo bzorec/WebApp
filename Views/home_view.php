@@ -34,16 +34,84 @@ foreach ($ads as $ad) {
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $ad->title; ?></h5>
                                 <p class="card-text"><?php echo $ad->category_name; ?></p>
-                                <a href="/index.php?page=ad-details&id=<?php echo $ad->id; ?>" class="btn btn-primary">Preberi
+                                <a href="/index.php?page=home&action=ad_details&id=<?php echo $ad->id; ?>"
+                                   class="btn btn-primary">Preberi
                                     več</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 mx-auto">
+                            <div class="comments-section">
+                                <h4>
+                                    Comments
+                                    <button type="button" class="btn btn-link float-end text-white"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#comment-list<?php echo $ad->id; ?>" aria-expanded="false"
+                                            aria-controls="comment-list<?php echo $ad->id; ?>">
+                                        <i class="bi bi-chevron-down"></i>
+                                        <i class="bi bi-chevron-up d-none"></i>
+                                    </button>
+                                </h4>
+                                <div class="collapse" id="comment-list<?php echo $ad->id; ?>">
+                                    <ul id="comment-list-ul-<?php echo $ad->id; ?>">
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#comment-list<?php echo $ad->id; ?>').on('show.bs.collapse', function () {
+                $('.bi-chevron-down').addClass('d-none');
+                $('.bi-chevron-up').removeClass('d-none');
+
+                $.ajax({
+                    url: `API/comment_api.php?ad_id=<?php echo $ad->id; ?>&limit=5`,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (comments) {
+                        const commentList = $('#comment-list-ul-<?php echo $ad->id; ?>');
+                        if (comments.length > 0) {
+                            commentList.empty();
+                            for (var i = 0; i < comments.length; i++) {
+                                var comment = comments[i];
+                                var commentHtml = `
+                <li class="comment-item">
+                    <div class="comment-header">
+                        <span class="comment-author">${comment.user}</span>
+                        <span class="comment-date">${comment.created_at}</span>
+                        <span class="comment-country">(${comment.country})</span>
+                    </div>
+                    <div class="comment-content">
+                        <p>${comment.content}</p>
+                    </div>
+                </li>
+            `;
+                                commentList.append(commentHtml);
+                            }
+                        } else {
+                            commentList.append('<li>No comments yet.</li>');
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert('Failed to retrieve comments: ' + errorThrown);
+                    }
+                });
+
+            });
+
+            $('#comment-list<?php echo $ad->id; ?>').on('hide.bs.collapse', function () {
+                $('.bi-chevron-down').removeClass('d-none');
+                $('.bi-chevron-up').addClass('d-none');
+            });
+        });
+    </script>
     <?php
 }
 

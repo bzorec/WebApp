@@ -31,5 +31,6 @@ class AdDetailsController
         require_once('Views/ad_details_view.php');
         $this->pageController->render_footer();
     }
+
 }
 

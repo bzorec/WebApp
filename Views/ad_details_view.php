@@ -1,10 +1,3 @@
-<style>
-    .comments-section {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-</style>
 <div class="container">
     <div class="row">
         <div class="col-lg-6 mx-auto">
@@ -39,7 +32,7 @@
 
                 </h4>
                 <div class="collapse" id="comment-list">
-                    <ul class="comment-list">
+                    <ul id="comment-list-ul-<?php echo $ad->id; ?>">
                     </ul>
                 </div>
             </div>
@@ -67,47 +60,67 @@
         $('#comment-list').on('show.bs.collapse', function () {
             $('.bi-chevron-down').addClass('d-none');
             $('.bi-chevron-up').removeClass('d-none');
-        });
-
-        $('#comment-list').on('hide.bs.collapse', function () {
-            $('.bi-chevron-down').removeClass('d-none');
-            $('.bi-chevron-up').addClass('d-none');
-        });
-        // Load comments for the current ad
-        $.ajax({
-            url: `API/comment_api.php?ad_id=<?php echo $ad->id; ?>`,
-            type: 'GET',
-            dataType: 'json',
-            success: function (comments) {
-                if (comments.length > 0) {
-                    $('.comment-list').empty();
-                    for (var i = 0; i < comments.length; i++) {
-                        var comment = comments[i];
-                        var commentHtml = `
-            <li class="comment-item">
-                <div class="comment-header">
-                    <span class="comment-author">${comment.user}</span>
-                    <span class="comment-date">${comment.created_at}</span>
-                </div>
-                <div class="comment-content">
-                    <p>${comment.content}</p>
-                </div>
-            </li>
-        `;
-                        $('.comment-list').append(commentHtml);
+            // Load comments for the current ad
+            $.ajax({
+                url: `API/comment_api.php?ad_id=<?php echo $ad->id; ?>`,
+                type: 'GET',
+                dataType: 'json',
+                success: function (comments) {
+                    const commentList = $('#comment-list-ul-<?php echo $ad->id; ?>');
+                    if (comments.length > 0) {
+                        commentList.empty();
+                        for (var i = 0; i < comments.length; i++) {
+                            var comment = comments[i];
+                            var deleteButton = '';
+                            console.log(comment.user_id === <?php echo $_SESSION["USER_ID"] ?? -1; ?>)
+                            if (comment.user_id === <?php echo $_SESSION["USER_ID"] ?? -1; ?>) {
+                                deleteButton = `<button class="btn btn-danger btn-sm delete-comment-btn" data-comment-id="${comment.id}">Delete</button>`;
+                            }
+                            var commentHtml = `
+    <li class="comment-item">
+        <div class="comment-header">
+            <span class="comment-author">${comment.user}</span>
+            <span class="comment-date">${comment.created_at}</span>
+            <span class="comment-country">(${comment.country})</span>
+            ${deleteButton}
+        </div>
+        <div class="comment-content">
+            <p>${comment.content}</p>
+        </div>
+    </li>
+`;
+                            commentList.append(commentHtml);
+                        }
+                    } else {
+                        commentList.append('<li>No comments yet.</li>');
                     }
-                } else {
-                    $('.comment-list').append('<li>No comments yet.</li>');
+                    console.log(comments)
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Failed to retrieve comments: ' + errorThrown);
                 }
-                console.log(comments)
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                alert('Failed to retrieve comments: ' + errorThrown);
-            }
+            });
         });
 
+        $(document).on('click', '.delete-comment-btn', function () {
+            debugger
+            const commentId = $(this).data('comment-id');
+            $.ajax({
+                url: 'API/comment_api.php',
+                type: 'DELETE',
+                data: JSON.stringify({
+                    commentId: commentId
+                }),
+                contentType: 'application/json',
+                success: function () {
+                    location.reload();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Failed to delete comment: ' + errorThrown);
+                }
+            });
+        });
 
-        // Submit a new comment
         $('#comment-form').submit(function (event) {
             event.preventDefault();
             let content = $('#comment-content').val();

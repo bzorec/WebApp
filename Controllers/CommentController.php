@@ -43,11 +43,30 @@ class CommentController
         return true;
     }
 
-    public function handleGetComments($ad_id): array
+    function get_country_by_ip($ip_address)
+    {
+        try {
+            $url = "http://ip-api.com/json/{$ip_address}?fields=country";
+            $json_response = file_get_contents($url);
+            $data = json_decode($json_response, true);
+
+            if (!empty($data)) {
+                return $data['country'];
+            } else {
+                return 'Unknown';
+            }
+        } catch (Exception $e) {
+            error_log('Error retrieving country: ' . $e->getMessage());
+            return 'Unknown';
+
+        }
+    }
+
+    public function handleGetComments($ad_id, $limit = null): array
     {
         $comments = array();
         try {
-            $commentObjects = $this->commentModel->get_comments($ad_id);
+            $commentObjects = $this->commentModel->get_comments($ad_id, $limit);
             foreach ($commentObjects as $comment) {
                 $user = $this->userModel->getUserById($comment['user_id']);
                 $commentArray = array(
@@ -55,6 +74,8 @@ class CommentController
                     'content' => $comment['content'],
                     'created_at' => $comment['created_at'],
                     'ip_address' => $comment['ip_address'],
+                    'country' => $this->get_country_by_ip($comment['ip_address']),
+                    'user_id' => $comment['user_id'],
                     'user' => $user ? $user['username'] : ''
                 );
                 $comments[] = $commentArray;

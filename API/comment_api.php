@@ -34,9 +34,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['message' => 'Invalid input data.']);
     }
 } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    if (isset($_GET['ad_id'])) {
+    if (isset($_GET['ad_id']) && !isset($_GET['limit'])) {
         $ad_id = $_GET['ad_id'];
         $result = $commentController->handleGetComments($ad_id);
+        http_response_code(200);
+        echo json_encode($result);
+    } else if (isset($_GET['ad_id']) && isset($_GET['limit'])) {
+        $limit = $_GET['limit'];
+        $ad_id = $_GET['ad_id'];
+        $result = $commentController->handleGetComments($ad_id, $limit);
         http_response_code(200);
         echo json_encode($result);
     } else {
@@ -45,8 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $data = json_decode(file_get_contents("php://input"), true);
-    if (isset($data['id'])) {
-        $commentId = $data['id'];
+    if (isset($data['commentId'])) {
+        $commentId = $data['commentId'];
         $result = $commentController->handleDeleteComment($commentId);
         if ($result) {
             http_response_code(200);

@@ -33,11 +33,18 @@ class CommentModel
     }
 
 
-    function get_comments($adId): array
+    function get_comments($adId, $limit = null): array
     {
-        $query = "SELECT c.*, u.username FROM comments c JOIN users u ON c.user_id = u.id WHERE ad_id = ?";
+        $query = "SELECT c.*, u.username FROM comments c JOIN users u ON c.user_id = u.id WHERE ad_id = ? ORDER BY c.created_at DESC";
+        if ($limit !== null) {
+            $query .= " LIMIT ?";
+        }
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $adId);
+        if ($limit !== null) {
+            $stmt->bind_param("ii", $adId, $limit);
+        } else {
+            $stmt->bind_param("i", $adId);
+        }
         $stmt->execute();
         $res = $stmt->get_result();
 

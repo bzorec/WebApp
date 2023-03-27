@@ -20,15 +20,37 @@
                 <td><?= $user['first_name'] ?></td>
                 <td><?= $user['last_name'] ?></td>
                 <td>
-                    <button class="btn btn-warning btn-edit-user" data-bs-toggle="modal"
+                    <button class="btn btn-warning" data-bs-toggle="modal"
                             data-bs-target="#editUserModal<?= $user['id'] ?>" data-user-id="<?= $user['id'] ?>">Edit
                     </button>
-                    <button class="btn btn-danger btn-delete-user" data-bs-toggle="modal"
-                            data-bs-target="#deleteUserModal<?= $user['id'] ?>">Delete
+                    <button type="button" class="btn btn-danger btn-delete-user" data-user-id="<?= $user['id'] ?>"
+                            data-bs-toggle="modal" data-bs-target="#deleteUserModal<?= $user['id'] ?>">Delete
                     </button>
                 </td>
             </tr>
+            <div class="modal fade" id="deleteUserModal<?= $user['id'] ?>" tabindex="-1"
+                 aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteUserModalLabel">Delete User</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="deleteUserForm<?= $user['id'] ?>" method="POST"
+                              action="/index.php?page=admin&action=delete_user">
+                            <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
+                            <div class="modal-body">
+                                Are you sure you want to delete this user?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </div>
+                        </form>
 
+                    </div>
+                </div>
+            </div>
             <div class="modal fade" id="editUserModal<?= $user['id'] ?>" tabindex="-1"
                  aria-labelledby="editUserModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -85,33 +107,30 @@
                             .done(function (data) {
                                 console.log(data);
                                 if (data.success) {
-                                    alert('User updated successfully');
                                     window.location.href = '/index.php?page=admin';
                                 } else {
                                     alert('Failed to update user');
                                 }
                             });
                     });
-                    $('#deleteUserModal<?= $user['id'] ?>').click(function () {
-                        if (confirm('Are you sure you want to delete this user?')) {
-                            let userId = $(this).data('user-id');
-                            $.ajax({
-                                type: 'POST',
-                                url: '/index.php?page=admin&action=delete_user',
-                                data: {id: userId},
-                                dataType: 'json',
-                                encode: true
-                            })
-                                .done(function (data) {
-                                    console.log(data);
-                                    if (data.success) {
-                                        alert('User deleted successfully');
-                                        window.location.href = '/index.php?page=admin';
-                                    } else {
-                                        alert('Failed to delete user');
-                                    }
-                                });
-                        }
+
+                    $('#deleteUserForm<?= $user['id'] ?>').submit(function (event) {
+                        event.preventDefault();
+                        let formData = $(this).serialize();
+                        $.ajax({
+                            type: 'POST',
+                            url: '/index.php?page=admin&action=delete_user',
+                            data: formData,
+                            dataType: 'json'
+                        })
+                            .done(function (data) {
+                                console.log(data);
+                                if (data.success) {
+                                    window.location.href = '/index.php?page=admin';
+                                } else {
+                                    alert('Failed to update user');
+                                }
+                            });
                     });
                 });
 
@@ -119,5 +138,5 @@
         <?php endforeach; ?>
         </tbody>
     </table>
-    <button class="btn btn-success">Add User</button>
+    <a href="/index.php?page=register" class="btn btn-success">Add User</a>
 </div>
