@@ -17,22 +17,27 @@ class LoginController
 
     public function handleLogin(): void
     {
+        $this->pageController->render_header("Prijava");
         $error = "";
         if (isset($_POST["submit"])) {
-            $username = $_POST["username"];
-            $password = $_POST["password"];
-            $user = $this->userModel->getUserByUsernameAndPassword($username, $password);
-            if ($user != null) {
-                $_SESSION["USER_ID"] = $user->getId();
-                $_SESSION["ROLE"] = $user->getRole();
+            if (($user_id = $this->userModel->validate_login($_POST["username"], $_POST["password"])) >= 0) {
+                $_SESSION["USER_ID"] = $user_id;
+                $_SESSION["ROLE"] = $this->userModel->get_user_role($user_id);
                 header("Location: index.php");
                 die();
             } else {
                 $error = "Prijava ni uspela.";
             }
         }
-        $this->pageController->render_header("Prijava");
         require_once('Views/login_view.php');
         $this->pageController->render_footer();
+    }
+
+    public function handleLogout(): void
+    {
+        session_start(); //Naloži sejo
+        session_unset(); //Odstrani sejne spremenljivke
+        session_destroy(); //Uniči sejo
+        header("Location: index.php");
     }
 }

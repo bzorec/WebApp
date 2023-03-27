@@ -2,6 +2,7 @@
 
 namespace Models;
 
+use InvalidArgumentException;
 use mysqli;
 
 class CommentModel
@@ -14,18 +15,23 @@ class CommentModel
         $this->conn->set_charset("UTF8");
     }
 
-    function add_comment($adId, $userId, $commentText): bool
+    function add_comment($adId, $userId, $commentText, $ip): bool
     {
-        $query = "INSERT INTO comments (ad_id, user_id, content) VALUES (?, ?, ?)";
+        $query = "INSERT INTO comments (ad_id, user_id, content, ip_address) VALUES (?, ?, ?, ?)";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("iis", $adId, $userId, $commentText);
+
+        $ipAddress = $_SERVER['REMOTE_ADDR'];
+
+        $stmt->bind_param("iiss", $adId, $userId, $commentText, $ipAddress);
 
         if ($stmt->execute()) {
             return true;
         } else {
+            echo mysqli_error($this->conn);
             return false;
         }
     }
+
 
     function get_comments($adId): array
     {
@@ -34,11 +40,16 @@ class CommentModel
         $stmt->bind_param("i", $adId);
         $stmt->execute();
         $res = $stmt->get_result();
+
+        if ($res->num_rows === 0) {
+            return [];
+        }
+
         $comments = array();
         while ($comment = $res->fetch_assoc()) {
             $comments[] = $comment;
         }
-        return $comments ?: [];
+        return $comments;
     }
 
 

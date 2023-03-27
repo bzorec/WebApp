@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vaja 1</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -29,22 +30,22 @@
                 if (isset($_SESSION["USER_ID"])) {
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../index.php?page=my_ads.php">Moji oglasi</a>
+                        <a class="nav-link" href="../index.php?page=my_ads">Moji oglasi</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../index.php?page=publish.php">Objavi oglas</a>
+                        <a class="nav-link" href="../index.php?page=publish">Objavi oglas</a>
                     </li>
                     <?php
                     if ($_SESSION["ROLE"] == "admin") {
                         ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="../index.php?page=admin.php">Admin</a>
+                            <a class="nav-link" href="../index.php?page=admin">Admin</a>
                         </li>
                         <?php
                     }
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="../index.php?page=logout.php">Odjava</a>
+                        <a class="nav-link" href="../index.php?page=logout">Odjava</a>
                     </li>
                     <?php
                 } else {

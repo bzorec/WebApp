@@ -16,11 +16,12 @@ $commentController = new CommentController($conn);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
-    if (isset($data['user_id']) && isset($data['ad_id']) && isset($data['content'])) {
+    if (isset($data['user_id']) && isset($data['ad_id']) && isset($data['content']) && isset($data['ip_address'])) {
         $user_id = $data['user_id'];
         $ad_id = $data['ad_id'];
         $content = $data['content'];
-        $result = $commentController->handleAddComment($ad_id, $user_id, $content);
+        $ip = $data['ip_address'];
+        $result = $commentController->handleAddComment($ad_id, $user_id, $content, $ip);
         if ($result) {
             http_response_code(201);
             echo json_encode(['message' => 'Comment added successfully.']);

@@ -2,6 +2,7 @@
 
 namespace Models;
 
+use Couchbase\User;
 use mysqli;
 
 class UserModel
@@ -12,6 +13,20 @@ class UserModel
     {
         $this->conn = $conn;
         $this->conn->set_charset("UTF8");
+    }
+
+    function validate_login($username, $password): int
+    {
+        $username = mysqli_real_escape_string($this->conn, $username);
+        $pass = sha1($password);
+        $query = "SELECT id, role FROM vaja1.users WHERE username='$username' AND password='$pass'";
+        $res = $this->conn->query($query);
+        if ($user_obj = $res->fetch_object()) {
+            $_SESSION["USER_ID"] = $user_obj->id;
+            $_SESSION["ROLE"] = $user_obj->role;
+            return $user_obj->id;
+        }
+        return -1;
     }
 
     function get_all_users(): array
@@ -25,18 +40,6 @@ class UserModel
             echo $this->conn->error;
             return [];
         }
-    }
-
-    public function getUserByUsernameAndPassword(string $username, string $password): ?User
-    {
-        $username = mysqli_real_escape_string($this->conn, $username);
-        $pass = sha1($password);
-        $query = "SELECT id, role FROM vaja1.users WHERE username='$username' AND password='$pass'";
-        $res = $this->conn->query($query);
-        if ($user_obj = $res->fetch_object()) {
-            return new User($user_obj->id, $user_obj->role);
-        }
-        return null;
     }
 
     function get_user_role($id): ?string
@@ -60,6 +63,27 @@ class UserModel
         $query = "SELECT * FROM users WHERE username=?";
         $stmt = $this->conn->prepare($query);
         $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        return $res->num_rows > 0;
+    }
+
+    public function getUserById($userId)
+    {
+        $query = "SELECT * FROM users WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+        return $user;
+    }
+
+    function user_exists($id): bool
+    {
+        $query = "SELECT * FROM users WHERE id=?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $id);
         $stmt->execute();
         $res = $stmt->get_result();
         return $res->num_rows > 0;
@@ -109,16 +133,14 @@ class UserModel
         }
     }
 
-    function edit_user($current_user_id, $user_id, $username, $password, $email, $first_name, $last_name, $address, $postal_code, $phone_number, $role): bool
+    function edit_user($current_user,$user_id, $username, $email, $first_name, $last_name): bool
     {
-        $current_user_role = $this->get_user_role($current_user_id);
+        $current_user_role = $this->get_user_role($current_user);
 
         if ($current_user_role === 'admin') {
-            $pass = sha1($password);
-
-            $query = "UPDATE users SET username=?, password=?, email=?, first_name=?, last_name=?, address=?, postal_code=?, phone_number=?, role=? WHERE id=?;";
+            $query = "UPDATE users SET username=?, email=?, first_name=?, last_name=? WHERE id=?";
             $stmt = $this->conn->prepare($query);
-            $stmt->bind_param("sssssssssi", $username, $pass, $email, $first_name, $last_name, $address, $postal_code, $phone_number, $role, $user_id);
+            $stmt->bind_param("ssssi", $username, $email, $first_name, $last_name, $user_id);
 
             if ($stmt->execute()) {
                 return true;
@@ -131,6 +153,7 @@ class UserModel
             return false;
         }
     }
+
 
     function register_user($username, $password, $email, $first_name, $last_name, $address = '', $postal_code = '', $phone_number = ''): bool
     {

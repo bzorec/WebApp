@@ -3,7 +3,6 @@
 namespace Controllers;
 
 use Models\UserModel;
-use Controllers\PageController;
 
 require_once 'Models/UserModel.php';
 
@@ -16,7 +15,6 @@ class RegisterController
     {
         $this->model = new UserModel($conn);
         $this->pageController = new PageController($conn);
-
     }
 
     function handleRegister(): void

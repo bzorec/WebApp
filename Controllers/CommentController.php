@@ -21,36 +21,44 @@ class CommentController
         $this->commentModel = new CommentModel($conn);
     }
 
-
-    public function handleAddComment(): array
+    private function CheckUserLogedIn(): void
     {
         if (!isset($_SESSION["USER_ID"])) {
             header("HTTP/1.1 401 Unauthorized");
             exit();
         }
+    }
 
-        $userId = $_SESSION["USER_ID"];
+    public function handleAddComment($ad_id, $userId, $commentText, $ip): bool
+    {
+        $this->CheckUserLogedIn();
 
-        if (!$this->userModel->username_exists($userId)) {
+        if (!$this->userModel->user_exists($userId)) {
             header("HTTP/1.1 404 Not Found");
             exit();
         }
 
-        $postData = file_get_contents("php://input");
-        $postJson = json_decode($postData, true);
-        $postId = $postJson["postId"];
-        $commentText = $postJson["commentText"];
+        $this->commentModel->add_comment($ad_id, $userId, $commentText, $ip);
 
-        $this->commentModel->add_comment($postId, $userId, $commentText);
-
-        return ["success" => true];
+        return true;
     }
 
-    function handleGetComments($ad_id): array
+    public function handleGetComments($ad_id): array
     {
         $comments = array();
         try {
-            $comments = $this->commentModel->get_comments($ad_id);
+            $commentObjects = $this->commentModel->get_comments($ad_id);
+            foreach ($commentObjects as $comment) {
+                $user = $this->userModel->getUserById($comment['user_id']);
+                $commentArray = array(
+                    'id' => $comment['id'],
+                    'content' => $comment['content'],
+                    'created_at' => $comment['created_at'],
+                    'ip_address' => $comment['ip_address'],
+                    'user' => $user ? $user['username'] : ''
+                );
+                $comments[] = $commentArray;
+            }
         } catch (Exception $e) {
             error_log('Error retrieving comments: ' . $e->getMessage());
         }
@@ -59,14 +67,11 @@ class CommentController
 
     public function handleDeleteComment(): array
     {
-        if (!isset($_SESSION["USER_ID"])) {
-            header("HTTP/1.1 401 Unauthorized");
-            exit();
-        }
+        $this->CheckUserLogedIn();
 
         $userId = $_SESSION["USER_ID"];
 
-        if (!$this->userModel->username_exists($userId)) {
+        if (!$this->userModel->user_exists($userId)) {
             header("HTTP/1.1 404 Not Found");
             exit();
         }
